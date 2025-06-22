@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Meri Files</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 8px;
+      text-align: left;
+    }
+    a.button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 6px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Meri Uploaded Files</h2>
+  <table id="fileTable">
+    <tr>
+      <th>File Name</th>
+      <th>Download</th>
+    </tr>
+  </table>
+
+  <script>
+    // Aapka Google Sheet CSV link yahan daalen
+    const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyDuU-tSh1H6s6laTBjVTI-YSEl9bwJ45EPTnKu14ZbTLqRGWJlE5supDGuH3OY6-xjIowhMIMV233/pub?gid=0&single=true&output=csv';
+
+    fetch(sheetURL)
+      .then(response => response.text())
+      .then(data => {
+        const rows = data.split('\n').slice(1); // Skip header
+        const table = document.getElementById('fileTable');
+
+        rows.forEach(row => {
+          const cols = row.split(',');
+          if (cols.length >= 2) {
+            const fileName = cols[0].replace(/"/g, '');
+            const fileLink = cols[1].replace(/"/g, '');
+
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+              <td>${fileName}</td>
+              <td><a class="button" href="${fileLink}" target="_blank">Download</a></td>
+            `;
+            table.appendChild(newRow);
+          }
+        });
+      });
+  </script>
+
+</body>
+</html>
